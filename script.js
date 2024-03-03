@@ -1,14 +1,10 @@
 let currentOptions;
 let nextOptions;
 let isDarkMode = false;
-let data;  // Necesitas tener acceso global a tus datos
 
 fetch('data.json')
     .then(response => response.json())
-    .then(jsonData => {
-        data = jsonData;  // Almacena los datos globalmente
-        startGame(data);
-    })
+    .then(data => startGame(data))
     .catch(error => console.error('Error cargando datos:', error));
 
 function startGame(data) {
@@ -42,18 +38,12 @@ function getRandomOptions(data) {
 }
 
 function guess(action) {
-    const isCorrect = action === 'higher' && nextOptions[1].value > nextOptions[0].value;
+    const isCorrect = action === 'higher' && parseInt(nextOptions[1].value, 10) > parseInt(nextOptions[0].value, 10);
 
     if (isCorrect) {
-        // Si es correcto, cargar nuevas opciones aleatorias diferentes
-        do {
-            nextOptions = getRandomOptions(data);
-        } while (nextOptions.some(option => option === currentOptions[0] || option === currentOptions[1]));
-
+        nextOptions = getRandomOptions(data);
         showOptions();
     } else {
-        // Si es incorrecto, mostrar mensaje y reiniciar el juego si es necesario
         alert('¡Has perdido! Reinicia el juego.');
-        // Puedes agregar lógica adicional para reiniciar el juego aquí si lo deseas.
     }
 }
